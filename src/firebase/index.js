@@ -17,7 +17,7 @@ const config = {
 };
 
 const app = initializeApp(config);
-const auth = getAuth();
+const auth = getAuth(app);
 
 export {
   app,

@@ -1,10 +1,11 @@
 import logo from "./logo.svg";
 import "./App.css";
+import RoutesComponent from "./container/Routes";
 
 function App() {
   return (
     <div className="App">
-      <h1>Hello Test Commit</h1>
+      <RoutesComponent />
     </div>
   );
 }
