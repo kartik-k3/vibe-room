@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, BrowserRouter, Route, Navigate } from "react-router-dom";
 
+const LOGIN_PAGE = React.lazy(() => import("../screens/login/Login"));
 const OpenRoute = ({ component: Component }) => {
   return (
     <>
@@ -32,7 +33,10 @@ const RoutesComponent = () => {
             );
           })}
           <Route path="/" element={<Navigate to={"/login"} />} />
-          <Route path="/login" element={<></>} />
+          <Route
+            path="/login"
+            element={<ClosedRoute component={LOGIN_PAGE} />}
+          />
         </Routes>
       </BrowserRouter>
     </>
