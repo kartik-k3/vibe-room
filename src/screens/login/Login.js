@@ -3,22 +3,29 @@ import TextInputField from "../../components/ui/TextInputField";
 import { Button } from "@mui/material";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleTheme } from "../../container/redux/reduxSlice/ThemeSlice";
 
 const Login = () => {
   const { control, handleSubmit } = useForm();
+  const color = useSelector((state) => state.theme);
+  const reduxDispatch = useDispatch();
 
   const handleClick = async (formData) => {
-    createUserWithEmailAndPassword(auth, formData?.email, formData?.password)
-      .then((userCredentials) => {
-        console.log(userCredentials);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    debugger;
+    reduxDispatch(toggleTheme());
+    // createUserWithEmailAndPassword(auth, formData?.email, formData?.password)
+    //   .then((userCredentials) => {
+    //     console.log(userCredentials);
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   };
 
   const debug = () => {
     debugger;
+    console.log(color?.theme);
     let intervals = [
       [1, 4],
       [0, 4],
@@ -58,7 +65,12 @@ const Login = () => {
       >
         Log In
       </Button>
-      <Button variant="outlined" onClick={debug}>
+      <Button
+        variant="outlined"
+        onClick={() => {
+          debug();
+        }}
+      >
         Test
       </Button>
     </div>
