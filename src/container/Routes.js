@@ -6,6 +6,8 @@ import { createTheme } from "@mui/system";
 import { ThemeProvider } from "@mui/material";
 
 const LOGIN_PAGE = React.lazy(() => import("../screens/login/Login"));
+const RESET_PAGE = React.lazy(() => import("../screens/login/Reset"));
+
 const OpenRoute = ({ component: Component }) => {
   return (
     <>
@@ -43,6 +45,10 @@ const RoutesComponent = () => {
             <Route
               path="/login"
               element={<ClosedRoute component={LOGIN_PAGE} />}
+            />
+            <Route
+              path="/reset"
+              element={<ClosedRoute component={RESET_PAGE} />}
             />
           </Routes>
         </BrowserRouter>

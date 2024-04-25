@@ -1,9 +1,19 @@
 import { Box } from "@mui/material";
 
-const UICard = ({ renderJsx }, props) => {
+const UICard = ({ children, customStyle }) => {
   return (
     <>
-      <Box sx={{ borderRadius: "16px" }}>{renderJsx}</Box>
+      <Box
+        sx={{
+          ...customStyle,
+          borderRadius: "16px",
+          backgroundColor: "background.paper",
+          padding: "16px",
+          color: "text.primary",
+        }}
+      >
+        {children}
+      </Box>
     </>
   );
 };

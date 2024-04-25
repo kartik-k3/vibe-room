@@ -1,19 +1,29 @@
 import { useForm } from "react-hook-form";
 import TextInputField from "../../components/ui/TextInputField";
-import { Button } from "@mui/material";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { Box, Button, Typography } from "@mui/material";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../../container/redux/reduxSlice/ThemeSlice";
+import UICard from "../../components/uiCard/UICard";
+import UIBackground from "../../components/uiCard/UIBackground";
+import { useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import { setUserData } from "../../container/redux/reduxSlice/UserSlice";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const { control, handleSubmit } = useForm();
   const color = useSelector((state) => state.theme);
   const reduxDispatch = useDispatch();
+  const [isLogin, setIsLogin] = useState(false);
+  const navigate = useNavigate();
 
-  const handleClick = async (formData) => {
-    debugger;
-    reduxDispatch(toggleTheme());
+  const handleSignUp = async (formData) => {
     // createUserWithEmailAndPassword(auth, formData?.email, formData?.password)
     //   .then((userCredentials) => {
     //     console.log(userCredentials);
@@ -23,8 +33,34 @@ const Login = () => {
     //   });
   };
 
+  const handleSignIn = async (formData) => {
+    const signInPromise = signInWithEmailAndPassword(
+      //creating a promise to show the status in toast.
+      auth,
+      formData?.email,
+      formData?.password
+    )
+      .then((userCredential) => {
+        localStorage.setItem("jwt", userCredential?.user?.accessToken);
+        const result = jwtDecode(userCredential?.user?.accessToken);
+        reduxDispatch(setUserData(result));
+        return result;
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.error(errorMessage);
+        throw error;
+      });
+    toast.promise(signInPromise, {
+      loading: "Signing You In...",
+      success: "Signed in Successfully!",
+      error: "There was a Problem While Signing You In",
+    });
+  };
+
   const debug = () => {
     debugger;
+    toast.loading("Succesfully Signed In!");
     console.log(color?.theme);
     let intervals = [
       [1, 4],
@@ -45,35 +81,78 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <TextInputField
-        name="email"
-        label="Email"
-        rules={{ required: "This Field is Required" }}
-        control={control}
-      />
-      <TextInputField
-        name="password"
-        label="Password"
-        rules={{ required: "This Field is Required" }}
-        control={control}
-      />
-      <Button
-        sx={{ textTransform: "none" }}
-        onClick={handleSubmit(handleClick)}
-        variant="outlined"
-      >
-        Log In
-      </Button>
-      <Button
-        variant="outlined"
-        onClick={() => {
-          debug();
+    <>
+      <UIBackground
+        customStyle={{
+          minHeight: "100vh",
+          minWidth: "100vw",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        Test
-      </Button>
-    </div>
+        <UICard
+          customStyle={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            minWidth: "20vw",
+          }}
+        >
+          <TextInputField
+            name="email"
+            label="Email"
+            rules={{ required: "This Field is Required" }}
+            control={control}
+          />
+          <TextInputField
+            name="password"
+            label="Password"
+            rules={{ required: "This Field is Required" }}
+            control={control}
+          />
+          <Typography
+            sx={{ margin: 0, textDecoration: "underline", cursor: "pointer" }}
+            onClick={() => {
+              navigate("/reset");
+            }}
+          >
+            Forgot Password?
+          </Typography>
+          <div style={{ gap: 10, display: "flex", justifyContent: "center" }}>
+            <Button
+              sx={{ textTransform: "none", width: "100%" }}
+              onClick={() => {
+                if (isLogin) {
+                  handleSubmit(handleSignIn)();
+                } else {
+                  handleSubmit(handleSignUp)();
+                }
+              }}
+              variant="contained"
+            >
+              {isLogin ? "Log In" : "Sign Up"}
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                debug();
+              }}
+            >
+              Test
+            </Button>
+          </div>
+          <Typography
+            onClick={() => {
+              setIsLogin((prevState) => !prevState);
+            }}
+            sx={{ margin: 0, textDecoration: "underline", cursor: "pointer" }}
+          >
+            {isLogin ? "Sign Up" : "Log In"}
+          </Typography>
+        </UICard>
+      </UIBackground>
+    </>
   );
 };
 

@@ -13,28 +13,26 @@ const TextInputField = (
   props
 ) => {
   return (
-    <div>
-      <Controller
-        name={name}
-        control={control}
-        rules={rules}
-        render={({ field: { value, onChange }, fieldState: { error } }) => (
-          <TextField
-            variant="outlined"
-            size="small"
-            multiline={multiline}
-            value={value}
-            onChange={onChange}
-            label={label}
-            margin="normal"
-            placeholder={placeholder}
-            helperText={error?.message || ""}
-            error={error}
-            {...props}
-          />
-        )}
-      />
-    </div>
+    <Controller
+      name={name}
+      control={control}
+      rules={rules}
+      render={({ field: { value, onChange }, fieldState: { error } }) => (
+        <TextField
+          variant="outlined"
+          size="small"
+          multiline={multiline}
+          value={value}
+          onChange={onChange}
+          label={label}
+          placeholder={placeholder}
+          helperText={error?.message || ""}
+          error={error}
+          fullWidth={false}
+          {...props}
+        />
+      )}
+    />
   );
 };
 

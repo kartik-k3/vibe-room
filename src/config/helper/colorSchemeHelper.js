@@ -6,6 +6,7 @@ import {
 import { createTheme } from "@mui/material";
 
 export const GET_COLOR_SCHEME = (color) => {
+  debugger;
   if (color?.theme === "dark") {
     return COLOR_SCHEME_DARK;
   }
@@ -13,7 +14,6 @@ export const GET_COLOR_SCHEME = (color) => {
 };
 
 export const getDesignTokens = (themeMode) => {
-  debugger;
   const THEME = GET_COLOR_SCHEME(themeMode);
   return createTheme({
     palette: {
