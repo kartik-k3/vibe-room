@@ -9,6 +9,7 @@ const TextInputField = (
     multiline = false,
     label = name,
     placeholder = "",
+    type = "text",
   },
   props
 ) => {
@@ -29,6 +30,7 @@ const TextInputField = (
           helperText={error?.message || ""}
           error={error}
           fullWidth={false}
+          type={type}
           {...props}
         />
       )}

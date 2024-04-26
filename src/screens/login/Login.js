@@ -1,13 +1,9 @@
 import { useForm } from "react-hook-form";
 import TextInputField from "../../components/ui/TextInputField";
-import { Box, Button, Typography } from "@mui/material";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { Button, Typography } from "@mui/material";
+import { signInWithEmailAndPassword, signInWithPopup } from "../../firebase";
 import { auth } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleTheme } from "../../container/redux/reduxSlice/ThemeSlice";
 import UICard from "../../components/uiCard/UICard";
 import UIBackground from "../../components/uiCard/UIBackground";
 import { useState } from "react";
@@ -15,6 +11,7 @@ import { jwtDecode } from "jwt-decode";
 import { setUserData } from "../../container/redux/reduxSlice/UserSlice";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { OAUTH } from "../../config/constants/OAUTH_LIST";
 
 const Login = () => {
   const { control, handleSubmit } = useForm();
@@ -33,6 +30,28 @@ const Login = () => {
     //   });
   };
 
+  const handleOauthFlow = (provider) => {
+    const pro = new provider();
+    debugger;
+    const popupPromise = signInWithPopup(auth, pro)
+      .then((result) => {
+        const credential = provider.credentialFromResult(result);
+        const token = credential.accessToken;
+        console.log(token);
+        navigate("/dashboard");
+        return "Popup sent";
+      })
+      .catch((error) => {
+        console.error(error.message);
+        return "Popup Error";
+      });
+    toast.promise(popupPromise, {
+      loading: "Looking for Sign in App...",
+      success: "Successfully Logged In",
+      error: "Could not open sign in",
+    });
+  };
+
   const handleSignIn = async (formData) => {
     const signInPromise = signInWithEmailAndPassword(
       //creating a promise to show the status in toast.
@@ -44,12 +63,13 @@ const Login = () => {
         localStorage.setItem("jwt", userCredential?.user?.accessToken);
         const result = jwtDecode(userCredential?.user?.accessToken);
         reduxDispatch(setUserData(result));
+        navigate("/dashboard");
         return result;
       })
       .catch((error) => {
         const errorMessage = error.message;
         console.error(errorMessage);
-        throw error;
+        return error.message;
       });
     toast.promise(signInPromise, {
       loading: "Signing You In...",
@@ -60,8 +80,8 @@ const Login = () => {
 
   const debug = () => {
     debugger;
-    toast.loading("Succesfully Signed In!");
-    console.log(color?.theme);
+    // toast.loading("Succesfully Signed In!");
+    // console.log(color?.theme);
     let intervals = [
       [1, 4],
       [0, 4],
@@ -110,6 +130,7 @@ const Login = () => {
             label="Password"
             rules={{ required: "This Field is Required" }}
             control={control}
+            type="password"
           />
           <Typography
             sx={{ margin: 0, textDecoration: "underline", cursor: "pointer" }}
@@ -119,7 +140,14 @@ const Login = () => {
           >
             Forgot Password?
           </Typography>
-          <div style={{ gap: 10, display: "flex", justifyContent: "center" }}>
+          <div
+            style={{
+              gap: 10,
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+            }}
+          >
             <Button
               sx={{ textTransform: "none", width: "100%" }}
               onClick={() => {
@@ -133,23 +161,50 @@ const Login = () => {
             >
               {isLogin ? "Log In" : "Sign Up"}
             </Button>
-            <Button
-              variant="outlined"
-              onClick={() => {
-                debug();
+            <p style={{ textAlign: "center", margin: 0 }}>Or Continue with</p>
+            <div
+              style={{
+                minWidth: "100%",
+                display: "flex",
+                justifyContent: "space-evenly",
+                gap: 6,
               }}
             >
-              Test
-            </Button>
+              {OAUTH.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <>
+                    <Button
+                      sx={{ backgroundColor: "white", width: "100%" }}
+                      variant="contained"
+                      onClick={() => {
+                        debugger;
+                        handleOauthFlow(item.provider);
+                      }}
+                    >
+                      <Icon />
+                    </Button>
+                  </>
+                );
+              })}
+            </div>
+            <p style={{ textAlign: "center", margin: 0 }}>
+              Don't have an account yet?
+            </p>
+            <Typography
+              onClick={() => {
+                setIsLogin((prevState) => !prevState);
+              }}
+              sx={{
+                margin: 0,
+                textDecoration: "underline",
+                cursor: "pointer",
+                textAlign: "center",
+              }}
+            >
+              {isLogin ? "Sign Up" : "Log In"}
+            </Typography>
           </div>
-          <Typography
-            onClick={() => {
-              setIsLogin((prevState) => !prevState);
-            }}
-            sx={{ margin: 0, textDecoration: "underline", cursor: "pointer" }}
-          >
-            {isLogin ? "Sign Up" : "Log In"}
-          </Typography>
         </UICard>
       </UIBackground>
     </>

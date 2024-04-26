@@ -58,11 +58,7 @@ const RoutesComponent = () => {
 };
 
 const PATHS = {
-  dashboard: () => (
-    <>
-      <h1>Dashboard</h1>
-    </>
-  ),
+  dashboard: React.lazy(() => import("../screens/dashboard/Dashboard")),
   meeting: () => (
     <>
       <h1>Meeting</h1>
