@@ -37,6 +37,7 @@ const Login = () => {
       .then((result) => {
         const credential = provider.credentialFromResult(result);
         const token = credential.accessToken;
+        reduxDispatch(setUserData(token));
         console.log(token);
         navigate("/dashboard");
         return "Popup sent";
@@ -104,8 +105,6 @@ const Login = () => {
     <>
       <UIBackground
         customStyle={{
-          minHeight: "100vh",
-          minWidth: "100vw",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -132,14 +131,22 @@ const Login = () => {
             control={control}
             type="password"
           />
-          <Typography
-            sx={{ margin: 0, textDecoration: "underline", cursor: "pointer" }}
-            onClick={() => {
-              navigate("/reset");
-            }}
-          >
-            Forgot Password?
-          </Typography>
+          <div>
+            <Typography
+              component={"span"}
+              sx={{
+                margin: 0,
+                textDecoration: "underline",
+                cursor: "pointer",
+                display: "inline-block",
+              }}
+              onClick={() => {
+                navigate("/reset");
+              }}
+            >
+              Forgot Password?
+            </Typography>
+          </div>
           <div
             style={{
               gap: 10,
@@ -191,19 +198,22 @@ const Login = () => {
             <p style={{ textAlign: "center", margin: 0 }}>
               Don't have an account yet?
             </p>
-            <Typography
-              onClick={() => {
-                setIsLogin((prevState) => !prevState);
-              }}
-              sx={{
-                margin: 0,
-                textDecoration: "underline",
-                cursor: "pointer",
-                textAlign: "center",
-              }}
-            >
-              {isLogin ? "Sign Up" : "Log In"}
-            </Typography>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Typography
+                onClick={() => {
+                  setIsLogin((prevState) => !prevState);
+                }}
+                sx={{
+                  margin: 0,
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  textAlign: "center",
+                  display: "inline-block",
+                }}
+              >
+                {isLogin ? "Sign Up" : "Log In"}
+              </Typography>
+            </div>
           </div>
         </UICard>
       </UIBackground>

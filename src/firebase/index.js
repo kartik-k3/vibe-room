@@ -13,6 +13,8 @@ import {
 const config = {
   apiKey: "AIzaSyBCSLfIIi0F9novIsRR7L1QWFdnoWccHBE",
   authDomain: "vibe-room-ui.firebaseapp.com",
+  databaseURL:
+    "https://vibe-room-ui-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "vibe-room-ui",
   storageBucket: "vibe-room-ui.appspot.com",
   messagingSenderId: "1033636199672",

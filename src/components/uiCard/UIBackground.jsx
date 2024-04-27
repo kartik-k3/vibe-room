@@ -7,8 +7,8 @@ const UIBackground = ({ children, customStyle }) => {
         sx={{
           backgroundColor: "background.default",
           padding: "6px",
-          minHeight: "100%",
-          minWidth: "100%",
+          minHeight: "100vh",
+          minWidth: "100vw",
           margin: 0,
           ...customStyle,
         }}

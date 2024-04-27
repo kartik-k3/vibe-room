@@ -58,11 +58,12 @@ const RoutesComponent = () => {
 };
 
 const PATHS = {
-  dashboard: React.lazy(() => import("../screens/dashboard/Dashboard")),
+  "dashboard:id": React.lazy(() => import("../screens/dashboard/Dashboard")),
   meeting: () => (
     <>
       <h1>Meeting</h1>
     </>
   ),
 };
+
 export default RoutesComponent;
