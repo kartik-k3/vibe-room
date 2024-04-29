@@ -24,15 +24,21 @@ const config = {
 
 const app = initializeApp(config);
 const auth = getAuth(app);
+const GoogleAuthProviderInit = new GoogleAuthProvider();
+GoogleAuthProviderInit.addScope(
+  "https://www.googleapis.com/auth/contacts.readonly"
+);
+const GithubAuthProviderInit = new GithubAuthProvider();
+const FacebookAuthProviderInit = new FacebookAuthProvider();
 
 export {
   app,
   auth,
+  GoogleAuthProviderInit,
+  FacebookAuthProviderInit,
+  GithubAuthProviderInit,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-  GithubAuthProvider,
   signInWithPopup,
 };

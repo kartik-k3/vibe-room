@@ -1,12 +1,12 @@
 import { Facebook, GitHub, Google } from "@mui/icons-material";
 import {
-  FacebookAuthProvider,
-  GithubAuthProvider,
-  GoogleAuthProvider,
-} from "firebase/auth";
+  FacebookAuthProviderInit,
+  GithubAuthProviderInit,
+  GoogleAuthProviderInit,
+} from "../../firebase";
 
 export const OAUTH = [
-  { icon: () => <Google />, provider: GoogleAuthProvider },
-  { icon: () => <GitHub />, provider: GithubAuthProvider },
-  { icon: () => <Facebook />, provider: FacebookAuthProvider },
+  { icon: () => <Google />, provider: GoogleAuthProviderInit },
+  { icon: () => <GitHub />, provider: GithubAuthProviderInit },
+  { icon: () => <Facebook />, provider: FacebookAuthProviderInit },
 ];

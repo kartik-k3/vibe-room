@@ -31,10 +31,9 @@ const Login = () => {
   };
 
   const handleOauthFlow = (provider) => {
-    const pro = new provider();
-    debugger;
-    const popupPromise = signInWithPopup(auth, pro)
+    const popupPromise = signInWithPopup(auth, provider)
       .then((result) => {
+        debugger;
         const credential = provider.credentialFromResult(result);
         const token = credential.accessToken;
         reduxDispatch(setUserData(token));
