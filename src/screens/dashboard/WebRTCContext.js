@@ -19,29 +19,23 @@ export const WebRTCProvider = ({ children }) => {
     }
   };
 
-  //   useEffect(() => {
-  //   if (localMediaRef.current) {
-  //     navigator.mediaDevices.addEventListener("devicechange", (event) => {
-  //       debugger;
-  //       console.log(event);
-  //       getConnectedDevices();
-  //     });
-  //     navigator.mediaDevices
-  //       .getUserMedia(MEDIA_CONSTRAINTS)
-  //       .then((stream) => {
-  //         debugger;
-  //         localMediaRef.current.srcObject = stream;
-  //       })
-  //       .catch((error) => {
-  //         debugger;
-  //         console.error("Error accessing media devices.", error);
-  //       });
-  //   }
-  //     debugger;
-  //     console.log(MEDIA_CONSTRAINTS);
-  //   }, []);
-
   const startAudioVideoStream = ({ mediaConstraints = MEDIA_CONSTRAINTS }) => {
+    // const merge = (boxTypes, truckSize) => {
+    //   debugger;
+    //   boxTypes.sort((a, b) => a[1] - b[1]).reverse();
+    //   let count = 0;
+    //   while (truckSize > 0) {
+    //     if (boxTypes[0][0] == 0) {
+    //       boxTypes.splice(0, 1);
+    //     }
+    //     if(boxTypes.length == 0) return count;
+    //     boxTypes[0][0]--;
+    //     count = boxTypes[0][1] + count;
+    //     truckSize--;
+    //   }
+    //   return count;
+    // };
+    // merge();
     if (!localMediaRef?.current) throw new Error("Could not find video tag.");
     navigator.mediaDevices
       .getUserMedia(mediaConstraints)
@@ -61,6 +55,8 @@ export const WebRTCProvider = ({ children }) => {
     localMediaRef?.current?.srcObject
       .getAudioTracks()
       .forEach((track) => (track.enabled = newConstraints?.audio));
+    if (!newConstraints?.video)
+      startAudioVideoStream({ mediaConstraints: newConstraints });
     setMEDIACONSTRAINTS(newConstraints);
   };
 
@@ -78,9 +74,7 @@ export const WebRTCProvider = ({ children }) => {
     <WebRTCContext.Provider
       value={{
         localMediaRef,
-        startAudioVideoStream,
-        toggleMuteMic,
-        toggleWebCam,
+        controls: { startAudioVideoStream, toggleMuteMic, toggleWebCam },
       }}
     >
       {children}

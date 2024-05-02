@@ -3,8 +3,7 @@ import UIBackground from "../../components/uiCard/UIBackground";
 import { useWebRTC } from "./WebRTCContext";
 
 const DashboardRenderer = () => {
-  const { localMediaRef, startAudioVideoStream, toggleMuteMic, toggleWebCam } =
-    useWebRTC();
+  const { localMediaRef, controls } = useWebRTC();
 
   return (
     <UIBackground>
@@ -13,13 +12,13 @@ const DashboardRenderer = () => {
         <video id="User1" autoPlay controls={false} ref={localMediaRef} />
         {/* <video id="User2" controls={false} /> */}
       </div>
-      <Button variant="contained" onClick={startAudioVideoStream}>
+      <Button variant="contained" onClick={controls?.startAudioVideoStream}>
         Start Video
       </Button>
-      <Button variant="contained" onClick={toggleMuteMic}>
+      <Button variant="contained" onClick={controls?.toggleMuteMic}>
         Toggle Mic
       </Button>
-      <Button variant="contained" onClick={toggleWebCam}>
+      <Button variant="contained" onClick={controls?.toggleWebCam}>
         Toggle WebCam
       </Button>
     </UIBackground>
