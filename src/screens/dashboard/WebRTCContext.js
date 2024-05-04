@@ -9,7 +9,11 @@ export const WebRTCProvider = ({ children }) => {
   });
   const localMediaRef = useRef(null);
 
-  const getLocalConnectionDetails = () => {};
+  const getLocalConnectionDetails = () => {
+    return {
+      mediaConstraints: MEDIA_CONSTRAINTS,
+    };
+  };
 
   const stopCurrentStream = () => {
     if (localMediaRef.current && localMediaRef.current.srcObject) {
@@ -20,22 +24,23 @@ export const WebRTCProvider = ({ children }) => {
   };
 
   const startAudioVideoStream = ({ mediaConstraints = MEDIA_CONSTRAINTS }) => {
-    // const merge = (boxTypes, truckSize) => {
+    // const merge = (costs, coins) => {
     //   debugger;
-    //   boxTypes.sort((a, b) => a[1] - b[1]).reverse();
+    //   costs.sort((a, b) => a - b);
     //   let count = 0;
-    //   while (truckSize > 0) {
-    //     if (boxTypes[0][0] == 0) {
-    //       boxTypes.splice(0, 1);
+    //   while (coins > 0) {
+    //     if (coins.length === 0) {
+    //       return count;
     //     }
-    //     if(boxTypes.length == 0) return count;
-    //     boxTypes[0][0]--;
-    //     count = boxTypes[0][1] + count;
-    //     truckSize--;
+    //     if (costs[0] < coins) {
+    //       coins = coins - costs[0];
+    //       costs.splice(0, 1);
+    //       count++;
+    //     }
     //   }
     //   return count;
     // };
-    // merge();
+    // merge([10,6,8,7,7,8], 5);
     if (!localMediaRef?.current) throw new Error("Could not find video tag.");
     navigator.mediaDevices
       .getUserMedia(mediaConstraints)
