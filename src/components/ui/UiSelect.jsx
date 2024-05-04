@@ -36,6 +36,7 @@ const UiSelect = (
                   backgroundColor: "black",
                   padding: "0px",
                   margin: "0px",
+                  marginTop: "-2px",
                 }}
               >
                 {label}

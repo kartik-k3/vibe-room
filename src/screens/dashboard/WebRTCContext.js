@@ -1,12 +1,12 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { MEDIA_CONSTRAINTS_OBJECT } from "../../config/constants/MEDIA_CONSTRAINTS";
 
 const WebRTCContext = createContext();
 
 export const WebRTCProvider = ({ children }) => {
-  const [MEDIA_CONSTRAINTS, setMEDIACONSTRAINTS] = useState({
-    audio: true,
-    video: true,
-  });
+  const [MEDIA_CONSTRAINTS, setMEDIACONSTRAINTS] = useState(
+    MEDIA_CONSTRAINTS_OBJECT
+  );
   const localMediaRef = useRef(null);
 
   const getLocalConnectionDetails = () => {
@@ -24,23 +24,25 @@ export const WebRTCProvider = ({ children }) => {
   };
 
   const startAudioVideoStream = ({ mediaConstraints = MEDIA_CONSTRAINTS }) => {
-    // const merge = (costs, coins) => {
+    // const merge = (nums) => {
     //   debugger;
-    //   costs.sort((a, b) => a - b);
-    //   let count = 0;
-    //   while (coins > 0) {
-    //     if (coins.length === 0) {
-    //       return count;
+    //   nums.sort((a, b) => a - b);
+    //   if (nums[0] !== 0) return 0;
+    //   const binSearch = (start, end) => {
+    //     debugger;
+    //     let middle = Math.floor((start + end) / 2);
+    //     if(start > end) return start
+    //     if (nums[middle] === middle) {
+    //       return binSearch(middle + 1, end);
+    //     } else {
+    //       return binSearch(start, middle - 1);
     //     }
-    //     if (costs[0] < coins) {
-    //       coins = coins - costs[0];
-    //       costs.splice(0, 1);
-    //       count++;
-    //     }
-    //   }
-    //   return count;
+    //   };
+    //   return binSearch(0, nums.length - 1);
     // };
-    // merge([10,6,8,7,7,8], 5);
+    // merge([0, 2, 3]);
+    if (mediaConstraints !== MEDIA_CONSTRAINTS)
+      setMEDIACONSTRAINTS(mediaConstraints);
     if (!localMediaRef?.current) throw new Error("Could not find video tag.");
     navigator.mediaDevices
       .getUserMedia(mediaConstraints)

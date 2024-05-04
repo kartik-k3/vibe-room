@@ -3,10 +3,23 @@ import UIBackground from "../../components/uiCard/UIBackground";
 import { useWebRTC } from "./WebRTCContext";
 import UiSelect from "../../components/ui/UiSelect";
 import { useForm } from "react-hook-form";
+import { getConnectedDevices } from "../../config/helper/webRTCHelpers";
+import { useEffect, useState } from "react";
+import { MEDIA_CONSTRAINTS_OBJECT } from "../../config/constants/MEDIA_CONSTRAINTS";
 
 const DashboardRenderer = () => {
   const { localMediaRef, controls } = useWebRTC();
   const { control, handleSubmit } = useForm();
+  const [deviceListOptions, setDeviceListOptions] = useState([]);
+
+  useEffect(() => {
+    getConnectedDevices("audioinput")
+      ?.then((formatedDevices) => {
+        setDeviceListOptions(formatedDevices);
+        // controls?.startAudioVideoStream({ ...MEDIA_CONSTRAINTS_OBJECT });
+      })
+      ?.catch((error) => console.error(error));
+  }, []);
 
   const here = (formData) => {
     debugger;
@@ -33,7 +46,7 @@ const DashboardRenderer = () => {
         <UiSelect
           name="device"
           control={control}
-          options={[{ label: "Hello", value: "Hello As well" }]}
+          options={deviceListOptions || []}
           rules={{ required: "This field is required" }}
           label="start mic"
         />
