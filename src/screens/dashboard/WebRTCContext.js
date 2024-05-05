@@ -9,12 +9,6 @@ export const WebRTCProvider = ({ children }) => {
   );
   const localMediaRef = useRef(null);
 
-  const getLocalConnectionDetails = () => {
-    return {
-      mediaConstraints: MEDIA_CONSTRAINTS,
-    };
-  };
-
   const stopCurrentStream = () => {
     if (localMediaRef.current && localMediaRef.current.srcObject) {
       localMediaRef.current.srcObject
@@ -24,29 +18,15 @@ export const WebRTCProvider = ({ children }) => {
   };
 
   const startAudioVideoStream = ({ mediaConstraints = MEDIA_CONSTRAINTS }) => {
-    // const merge = (nums) => {
-    //   debugger;
-    //   nums.sort((a, b) => a - b);
-    //   if (nums[0] !== 0) return 0;
-    //   const binSearch = (start, end) => {
-    //     debugger;
-    //     let middle = Math.floor((start + end) / 2);
-    //     if(start > end) return start
-    //     if (nums[middle] === middle) {
-    //       return binSearch(middle + 1, end);
-    //     } else {
-    //       return binSearch(start, middle - 1);
-    //     }
-    //   };
-    //   return binSearch(0, nums.length - 1);
-    // };
-    // merge([0, 2, 3]);
-    if (mediaConstraints !== MEDIA_CONSTRAINTS)
-      setMEDIACONSTRAINTS(mediaConstraints);
     if (!localMediaRef?.current) throw new Error("Could not find video tag.");
     navigator.mediaDevices
       .getUserMedia(mediaConstraints)
       .then((stream) => {
+        const audioTrack = stream.getAudioTracks()[0];
+        if (!MEDIA_CONSTRAINTS?.audio) {
+          //The Audio Stays On but stays disabled if mute is on for seamless.
+          audioTrack.enabled = false;
+        }
         localMediaRef.current.srcObject = stream;
       })
       .catch((error) => {
@@ -62,8 +42,6 @@ export const WebRTCProvider = ({ children }) => {
     localMediaRef?.current?.srcObject
       .getAudioTracks()
       .forEach((track) => (track.enabled = newConstraints?.audio));
-    if (!newConstraints?.video)
-      startAudioVideoStream({ mediaConstraints: newConstraints });
     setMEDIACONSTRAINTS(newConstraints);
   };
 
@@ -73,7 +51,12 @@ export const WebRTCProvider = ({ children }) => {
       ...MEDIA_CONSTRAINTS,
       video: !MEDIA_CONSTRAINTS.video,
     };
-    startAudioVideoStream({ mediaConstraints: newConstraints });
+    startAudioVideoStream({
+      mediaConstraints: {
+        ...newConstraints,
+        audio: newConstraints?.audio || true,
+      },
+    });
     setMEDIACONSTRAINTS(newConstraints);
   };
 
