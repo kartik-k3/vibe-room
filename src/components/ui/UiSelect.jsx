@@ -1,9 +1,11 @@
 import {
+  Box,
   FormControl,
   FormHelperText,
   InputLabel,
   MenuItem,
   Select,
+  TextField,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
 
@@ -15,6 +17,7 @@ const UiSelect = (
     defaultValue,
     options = [{ label: "No Data", value: "No Data" }],
     label = name || "Label",
+    onChangeCallback = null,
   },
   props
 ) => {
@@ -24,39 +27,33 @@ const UiSelect = (
         name={name}
         control={control}
         rules={rules}
-        render={({ field: { value, onChange }, fieldState: { error } }) => (
-          <FormControl
-            size="small"
-            sx={{ minWidth: "150px", margin: "5px" }}
-            error={error}
-          >
-            <InputLabel id={label}>
-              <div
-                style={{
-                  backgroundColor: "black",
-                  padding: "0px",
-                  margin: "0px",
-                  marginTop: "-2px",
-                }}
-              >
-                {label}
-              </div>
-            </InputLabel>
-            <Select
+        render={({
+          field: { value = defaultValue, onChange },
+          fieldState: { error },
+        }) => {
+          return (
+            <TextField
+              key={defaultValue}
               value={value}
-              onChange={onChange}
-              defaultValue={defaultValue}
-              labelId={label}
+              select
+              onChange={(e) => {
+                onChange(e);
+                onChangeCallback(e.target.value);
+              }}
+              label={label}
               variant="outlined"
+              helperText={error?.message}
+              error={error}
+              sx={{ minWidth: "100%" }}
+              defaultValue={defaultValue}
               {...props}
             >
               {options.map((item) => (
                 <MenuItem value={item}>{item?.label}</MenuItem>
               ))}
-            </Select>
-            <FormHelperText>{error?.message}</FormHelperText>
-          </FormControl>
-        )}
+            </TextField>
+          );
+        }}
       />
     </>
   );

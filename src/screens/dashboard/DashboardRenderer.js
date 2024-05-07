@@ -9,22 +9,17 @@ import { MEDIA_CONSTRAINTS_OBJECT } from "../../config/constants/MEDIA_CONSTRAIN
 
 const DashboardRenderer = () => {
   const { localMediaRef, controls } = useWebRTC();
-  const { control, handleSubmit } = useForm();
   const [deviceListOptions, setDeviceListOptions] = useState([]);
+  const { control } = useForm();
 
   useEffect(() => {
     getConnectedDevices("audioinput")
       ?.then((formatedDevices) => {
         setDeviceListOptions(formatedDevices);
-        // controls?.startAudioVideoStream({ ...MEDIA_CONSTRAINTS_OBJECT });
+        controls?.changeAudioInputDevice(formatedDevices?.[0]?.deviceId);
       })
       ?.catch((error) => console.error(error));
   }, []);
-
-  const here = (formData) => {
-    debugger;
-    console.log(formData);
-  };
 
   return (
     <UIBackground>
@@ -42,15 +37,26 @@ const DashboardRenderer = () => {
       <Button variant="contained" onClick={controls?.toggleWebCam}>
         Toggle WebCam
       </Button>
-      <div style={{ width: "100%" }}>
+      <div
+        style={{
+          width: "20%",
+          marginTop: "8px",
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
         <UiSelect
           name="device"
           control={control}
           options={deviceListOptions || []}
           rules={{ required: "This field is required" }}
-          label="start mic"
+          label="Select a Device"
+          defaultValue={deviceListOptions?.[0]}
+          onChangeCallback={(device) => {
+            debugger;
+            controls.changeAudioInputDevice(device?.value);
+          }}
         />
-        <Button onClick={handleSubmit(here)}>PEEP</Button>
       </div>
     </UIBackground>
   );

@@ -7,9 +7,14 @@ export const WebRTCProvider = ({ children }) => {
   const [MEDIA_CONSTRAINTS, setMEDIACONSTRAINTS] = useState(
     MEDIA_CONSTRAINTS_OBJECT
   );
+  const [selectedDevices, setSelectedDevices] = useState({
+    audio: "",
+    video: "",
+  });
   const localMediaRef = useRef(null);
 
   const stopCurrentStream = () => {
+    //Stops the current stream
     if (localMediaRef.current && localMediaRef.current.srcObject) {
       localMediaRef.current.srcObject
         .getTracks()
@@ -17,14 +22,35 @@ export const WebRTCProvider = ({ children }) => {
     }
   };
 
-  const startAudioVideoStream = ({ mediaConstraints = MEDIA_CONSTRAINTS }) => {
+  const changeAudioInputDevice = (deviceId) => {
+    stopCurrentStream(); //Stopping current Stream to start new one with Selected device.
+    setSelectedDevices((prevState) => {
+      return { ...prevState, audio: deviceId };
+    });
+    startAudioVideoStream({
+      ...MEDIA_CONSTRAINTS,
+      audio: {
+        deviceId: deviceId,
+      },
+    });
+  };
+
+  const startAudioVideoStream = (mediaConstraints) => {
     if (!localMediaRef?.current) throw new Error("Could not find video tag.");
+    debugger;
+    if (!mediaConstraints?.audio?.deviceId && selectedDevices?.audio) {
+      //If toggle video function is calling with audio true then put the selected Device here
+      mediaConstraints = {
+        ...mediaConstraints,
+        audio: { deviceId: selectedDevices?.audio },
+      };
+    }
     navigator.mediaDevices
       .getUserMedia(mediaConstraints)
       .then((stream) => {
         const audioTrack = stream.getAudioTracks()[0];
         if (!MEDIA_CONSTRAINTS?.audio) {
-          //The Audio Stays On but stays disabled if mute is on for seamless.
+          //The Audio Stays On but stays disabled if mute is on for seamless connectivity.
           audioTrack.enabled = false;
         }
         localMediaRef.current.srcObject = stream;
@@ -37,7 +63,7 @@ export const WebRTCProvider = ({ children }) => {
   const toggleMuteMic = () => {
     const newConstraints = {
       ...MEDIA_CONSTRAINTS,
-      audio: !MEDIA_CONSTRAINTS.audio,
+      audio: !MEDIA_CONSTRAINTS.audio, //This is not used just to keep track of the audio status
     };
     localMediaRef?.current?.srcObject
       .getAudioTracks()
@@ -49,13 +75,12 @@ export const WebRTCProvider = ({ children }) => {
     stopCurrentStream();
     const newConstraints = {
       ...MEDIA_CONSTRAINTS,
-      video: !MEDIA_CONSTRAINTS.video,
+      video: !MEDIA_CONSTRAINTS.video, //This is used while toggling start audio video
     };
     startAudioVideoStream({
-      mediaConstraints: {
-        ...newConstraints,
-        audio: newConstraints?.audio || true,
-      },
+      ...newConstraints,
+      audio: newConstraints?.audio || true,
+      // Always keep audio active to avoid restarting the stream. Muting is handled separately.
     });
     setMEDIACONSTRAINTS(newConstraints);
   };
@@ -64,7 +89,12 @@ export const WebRTCProvider = ({ children }) => {
     <WebRTCContext.Provider
       value={{
         localMediaRef,
-        controls: { startAudioVideoStream, toggleMuteMic, toggleWebCam },
+        controls: {
+          startAudioVideoStream,
+          toggleMuteMic,
+          toggleWebCam,
+          changeAudioInputDevice,
+        },
       }}
     >
       {children}
