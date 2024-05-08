@@ -15,7 +15,6 @@ import { OAUTH } from "../../config/constants/OAUTH_LIST";
 
 const Login = () => {
   const { control, handleSubmit } = useForm();
-  const color = useSelector((state) => state.theme);
   const reduxDispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
