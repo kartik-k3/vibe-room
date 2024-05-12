@@ -1,13 +1,7 @@
-import {
-  Box,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import React from "react";
+import { MenuItem, TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
+import PropTypes from "prop-types";
 
 const UiSelect = (
   {
@@ -48,8 +42,10 @@ const UiSelect = (
               defaultValue={defaultValue}
               {...props}
             >
-              {options.map((item) => (
-                <MenuItem value={item}>{item?.label}</MenuItem>
+              {options.map((item, idx) => (
+                <MenuItem key={idx} value={item}>
+                  {item?.label}
+                </MenuItem>
               ))}
             </TextField>
           );
@@ -57,6 +53,21 @@ const UiSelect = (
       />
     </>
   );
+};
+
+UiSelect.propTypes = {
+  name: PropTypes.string,
+  control: PropTypes.object.isRequired,
+  rules: PropTypes.object,
+  defaultValue: PropTypes.any,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.any.isRequired,
+    })
+  ),
+  label: PropTypes.string,
+  onChangeCallback: PropTypes.func,
 };
 
 export default UiSelect;

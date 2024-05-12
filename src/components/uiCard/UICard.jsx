@@ -1,4 +1,6 @@
+import React from "react";
 import { Box } from "@mui/material";
+import Proptypes from "prop-types";
 
 const UICard = ({ children, customStyle }) => {
   return (
@@ -16,6 +18,11 @@ const UICard = ({ children, customStyle }) => {
       </Box>
     </>
   );
+};
+
+UICard.propTypes = {
+  children: Proptypes.element,
+  customStyle: Proptypes.object,
 };
 
 export default UICard;

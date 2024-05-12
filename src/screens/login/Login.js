@@ -1,9 +1,10 @@
+import React from "react";
 import { useForm } from "react-hook-form";
 import TextInputField from "../../components/ui/TextInputField";
 import { Button, Typography } from "@mui/material";
 import { signInWithEmailAndPassword, signInWithPopup } from "../../firebase";
 import { auth } from "../../firebase";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import UICard from "../../components/uiCard/UICard";
 import UIBackground from "../../components/uiCard/UIBackground";
 import { useState } from "react";
@@ -18,6 +19,7 @@ const Login = () => {
   const reduxDispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
+  const noAccountMessage = "Don't have an account yet?";
 
   const handleSignUp = async (formData) => {
     // createUserWithEmailAndPassword(auth, formData?.email, formData?.password)
@@ -32,7 +34,6 @@ const Login = () => {
   const handleOauthFlow = (provider) => {
     const popupPromise = signInWithPopup(auth, provider)
       .then((result) => {
-        debugger;
         const credential = provider.credentialFromResult(result);
         const token = credential.accessToken;
         reduxDispatch(setUserData(token));
@@ -75,28 +76,6 @@ const Login = () => {
       success: "Signed in Successfully!",
       error: "There was a Problem While Signing You In",
     });
-  };
-
-  const debug = () => {
-    debugger;
-    // toast.loading("Succesfully Signed In!");
-    // console.log(color?.theme);
-    let intervals = [
-      [1, 4],
-      [0, 4],
-    ];
-    intervals.sort((a, b) => a[0] - b[0]);
-    for (let i = 0; i < intervals.length - 1; i++) {
-      if (intervals[i][1] >= intervals[i + 1][0]) {
-        if (intervals[i][1] > intervals[i + 1][1]) {
-          intervals.splice(i, 2, [intervals[i][0], intervals[i][1]]);
-        } else {
-          intervals.splice(i, 2, [intervals[i][0], intervals[i + 1][1]]);
-        }
-        i--;
-      }
-    }
-    return intervals;
   };
 
   return (
@@ -183,7 +162,6 @@ const Login = () => {
                       sx={{ backgroundColor: "white", width: "100%" }}
                       variant="contained"
                       onClick={() => {
-                        debugger;
                         handleOauthFlow(item.provider);
                       }}
                     >
@@ -193,9 +171,7 @@ const Login = () => {
                 );
               })}
             </div>
-            <p style={{ textAlign: "center", margin: 0 }}>
-              Don't have an account yet?
-            </p>
+            <p style={{ textAlign: "center", margin: 0 }}>{noAccountMessage}</p>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <Typography
                 onClick={() => {

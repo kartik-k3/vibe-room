@@ -1,5 +1,7 @@
+import React from "react";
 import { TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
+import Proptypes from "prop-types";
 
 const TextInputField = (
   {
@@ -36,6 +38,16 @@ const TextInputField = (
       )}
     />
   );
+};
+
+TextInputField.propTypes = {
+  name: Proptypes.string,
+  control: Proptypes.object.isRequired,
+  rules: Proptypes.object,
+  multiline: Proptypes.bool,
+  label: Proptypes.string,
+  placeholder: Proptypes.string,
+  type: Proptypes.string,
 };
 
 export default TextInputField;

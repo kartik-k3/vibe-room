@@ -1,3 +1,4 @@
+import React from "react";
 import { Button, Typography } from "@mui/material";
 import TextInputField from "../../components/ui/TextInputField";
 import UIBackground from "../../components/uiCard/UIBackground";
@@ -8,7 +9,7 @@ import { auth } from "../../firebase";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-const Reset = (props) => {
+const Reset = () => {
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
 

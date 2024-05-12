@@ -1,11 +1,9 @@
-import logo from "./logo.svg";
 import "./App.css";
+import React from "react";
 import RoutesComponent from "./container/Routes";
 import { Provider } from "react-redux";
 import { store } from "./container/redux/store";
-import { useEffect, useMemo } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
+import { useEffect } from "react";
 import { GET_COLOR_SCHEME } from "./config/helper/colorSchemeHelper";
 import { Toaster } from "react-hot-toast";
 import { TOASTER_CONFIG } from "./config/constants/TOASTER_CONFIG";

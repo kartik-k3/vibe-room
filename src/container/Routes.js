@@ -2,8 +2,8 @@ import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Routes, BrowserRouter, Route, Navigate } from "react-router-dom";
 import { getDesignTokens } from "../config/helper/colorSchemeHelper";
-import { createTheme } from "@mui/system";
 import { ThemeProvider } from "@mui/material";
+import Proptypes from "prop-types";
 
 const LOGIN_PAGE = React.lazy(() => import("../screens/login/Login"));
 const RESET_PAGE = React.lazy(() => import("../screens/login/Reset"));
@@ -55,6 +55,14 @@ const RoutesComponent = () => {
       </ThemeProvider>
     </>
   );
+};
+
+OpenRoute.propTypes = {
+  component: Proptypes.element,
+};
+
+ClosedRoute.propTypes = {
+  component: Proptypes.element,
 };
 
 const PATHS = {

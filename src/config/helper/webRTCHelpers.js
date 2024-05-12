@@ -8,7 +8,7 @@ export const getConnectedDevices = async (type = "") => {
             item?.deviceId !== "default" && (type === "" || item?.kind === type)
         )
         .map((deviceItem) => {
-          let temp = deviceItem;
+          const temp = deviceItem;
           temp.value = deviceItem?.deviceId;
           return temp;
         });

@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import {
   COLOR_SCHEME_DARK,
   COLOR_SCHEME_LIGHT,

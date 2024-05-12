@@ -1,3 +1,4 @@
+import React from "react";
 import { Button, Typography } from "@mui/material";
 import UIBackground from "../../components/uiCard/UIBackground";
 import { useWebRTC } from "./WebRTCContext";
@@ -5,7 +6,6 @@ import UiSelect from "../../components/ui/UiSelect";
 import { useForm } from "react-hook-form";
 import { getConnectedDevices } from "../../config/helper/webRTCHelpers";
 import { useEffect, useState } from "react";
-import { MEDIA_CONSTRAINTS_OBJECT } from "../../config/constants/MEDIA_CONSTRAINTS";
 
 const DashboardRenderer = () => {
   const { localMediaRef, controls } = useWebRTC();
@@ -53,7 +53,6 @@ const DashboardRenderer = () => {
           label="Select a Device"
           defaultValue={deviceListOptions?.[0]}
           onChangeCallback={(device) => {
-            debugger;
             controls.changeAudioInputDevice(device?.value);
           }}
         />

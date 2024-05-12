@@ -1,3 +1,4 @@
+import React from "react";
 import { WebRTCProvider } from "./WebRTCContext";
 import DashboardRenderer from "./DashboardRenderer";
 

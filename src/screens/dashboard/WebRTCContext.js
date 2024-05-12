@@ -1,5 +1,7 @@
+import React from "react";
 import { createContext, useContext, useRef, useState } from "react";
 import { MEDIA_CONSTRAINTS_OBJECT } from "../../config/constants/MEDIA_CONSTRAINTS";
+import PropTypes from "prop-types";
 
 const WebRTCContext = createContext();
 
@@ -37,7 +39,6 @@ export const WebRTCProvider = ({ children }) => {
 
   const startAudioVideoStream = (mediaConstraints) => {
     if (!localMediaRef?.current) throw new Error("Could not find video tag.");
-    debugger;
     if (!mediaConstraints?.audio?.deviceId && selectedDevices?.audio) {
       //If toggle video function is calling with audio true then put the selected Device here
       mediaConstraints = {
@@ -100,6 +101,10 @@ export const WebRTCProvider = ({ children }) => {
       {children}
     </WebRTCContext.Provider>
   );
+};
+
+WebRTCProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export const useWebRTC = () => {

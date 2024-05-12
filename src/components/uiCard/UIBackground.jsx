@@ -1,4 +1,6 @@
+import React from "react";
 import { Box } from "@mui/material";
+import Proptypes from "prop-types";
 
 const UIBackground = ({ children, customStyle }) => {
   return (
@@ -17,6 +19,11 @@ const UIBackground = ({ children, customStyle }) => {
       </Box>
     </>
   );
+};
+
+UIBackground.propTypes = {
+  children: Proptypes.element,
+  customStyle: Proptypes.object,
 };
 
 export default UIBackground;
