@@ -66,7 +66,7 @@ ClosedRoute.propTypes = {
 };
 
 const PATHS = {
-  // dashboard: React.lazy(() => import()),
+  dashboard: React.lazy(() => import("../screens/home/EntryScreen")),
   "dashboard/:id": React.lazy(() => import("../screens/dashboard/Dashboard")),
   meeting: () => (
     <>

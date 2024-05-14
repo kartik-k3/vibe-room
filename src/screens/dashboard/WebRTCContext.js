@@ -47,7 +47,10 @@ export const WebRTCProvider = ({ children }) => {
       };
     }
     navigator.mediaDevices
-      .getUserMedia(mediaConstraints)
+      .getUserMedia({
+        ...mediaConstraints,
+        audio: { ...mediaConstraints.audio, noiseSuppression: true }, //Noise Suppression stays on for every microphone
+      })
       .then((stream) => {
         const audioTrack = stream.getAudioTracks()[0];
         if (!MEDIA_CONSTRAINTS?.audio) {

@@ -9,6 +9,7 @@ import {
   GithubAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
+import { getDatabase } from "firebase/database";
 
 const config = {
   apiKey: "AIzaSyBCSLfIIi0F9novIsRR7L1QWFdnoWccHBE",
@@ -24,6 +25,7 @@ const config = {
 
 const app = initializeApp(config);
 const auth = getAuth(app);
+const database = getDatabase(app);
 const GoogleAuthProviderInit = new GoogleAuthProvider();
 GoogleAuthProviderInit.addScope(
   "https://www.googleapis.com/auth/contacts.readonly"
@@ -34,6 +36,7 @@ const FacebookAuthProviderInit = new FacebookAuthProvider();
 export {
   app,
   auth,
+  database,
   GoogleAuthProviderInit,
   FacebookAuthProviderInit,
   GithubAuthProviderInit,

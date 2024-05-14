@@ -8,6 +8,16 @@ export default [
     ignores: ["**/*.test.js"],
   },
   {
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: {
+        ...globals.browser,
+      },
+    },
     files: ["**/*.js", "**/*.jsx"],
     rules: {
       "prefer-const": "warn",

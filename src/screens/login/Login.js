@@ -21,6 +21,7 @@ const Login = () => {
   const navigate = useNavigate();
   const noAccountMessage = "Don't have an account yet?";
 
+  // eslint-disable-next-line
   const handleSignUp = async (formData) => {
     // createUserWithEmailAndPassword(auth, formData?.email, formData?.password)
     //   .then((userCredentials) => {
@@ -64,7 +65,7 @@ const Login = () => {
         const result = jwtDecode(userCredential?.user?.accessToken);
         reduxDispatch(setUserData(result));
         navigate("/dashboard");
-        return result;
+        return result; //We have to put a return in the .then to create a promise.
       })
       .catch((error) => {
         const errorMessage = error.message;
