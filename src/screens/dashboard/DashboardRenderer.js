@@ -19,7 +19,7 @@ const DashboardRenderer = () => {
         controls?.changeAudioInputDevice(formatedDevices?.[0]?.deviceId);
       })
       ?.catch((error) => console.error(error));
-  });
+  }, []);
 
   return (
     <UIBackground>
