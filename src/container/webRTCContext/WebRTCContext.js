@@ -1,11 +1,12 @@
-import React from "react";
-import { createContext, useContext, useRef, useState } from "react";
-import { MEDIA_CONSTRAINTS_OBJECT } from "../../config/constants/MEDIA_CONSTRAINTS";
 import PropTypes from "prop-types";
+import React, { createContext, useContext, useRef, useState } from "react";
+import { MEDIA_CONSTRAINTS_OBJECT } from "../../config/constants/MEDIA_CONSTRAINTS";
+import { WEBRTC_CONFIG } from "../../config/constants/WEBRTC_CONFIG";
 
 const WebRTCContext = createContext();
 
 export const WebRTCProvider = ({ children }) => {
+  //States for Media capture and configuration
   const [MEDIA_CONSTRAINTS, setMEDIACONSTRAINTS] = useState(
     MEDIA_CONSTRAINTS_OBJECT
   );
@@ -15,6 +16,14 @@ export const WebRTCProvider = ({ children }) => {
   });
   const localMediaRef = useRef(null);
 
+  //States for WebRTC Connection
+  const [RTCState, setRTCState] = useState({
+    peerConnection: null,
+    dataChannel: null,
+    status: "idle",
+  });
+
+  //Methods for Media capture and settings
   const stopCurrentStream = () => {
     //Stops the current stream
     if (localMediaRef.current && localMediaRef.current.srcObject) {
@@ -88,6 +97,22 @@ export const WebRTCProvider = ({ children }) => {
     });
     setMEDIACONSTRAINTS(newConstraints);
   };
+
+  //WebRTC Methods
+
+  const initializePeers = () => {
+    //Initializing WebRTC peers
+    const peerConnection = new RTCPeerConnection(WEBRTC_CONFIG);
+    setRTCState((prevState) => {
+      return {
+        ...prevState,
+        peerConnection: peerConnection,
+        status: "initialized",
+      };
+    });
+  };
+
+  const createOffer = () => {};
 
   return (
     <WebRTCContext.Provider

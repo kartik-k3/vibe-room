@@ -29,6 +29,5 @@ export const getGeneratedRoomId = (len = 6) => {
   for (let i = 0; i < len; i++) {
     generatedString = generatedString + letters[generateRandomNumber(0, 51)];
   }
-  debugger;
   return generatedString;
 };

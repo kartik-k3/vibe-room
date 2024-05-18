@@ -13,7 +13,7 @@ function App() {
     store?.liftedStore?.getState()?.computedStates?.[0]?.state?.theme?.theme;
 
   useEffect(() => {
-    document.body.style.backgroundColor = theme == "dark" ? "black" : "white";
+    document.body.style.backgroundColor = theme === "dark" ? "black" : "white";
   }, [theme]);
 
   return (

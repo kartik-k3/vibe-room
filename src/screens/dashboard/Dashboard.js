@@ -1,5 +1,5 @@
 import React from "react";
-import { WebRTCProvider } from "./WebRTCContext";
+import { WebRTCProvider } from "../../container/webRTCContext/WebRTCContext";
 import DashboardRenderer from "./DashboardRenderer";
 
 const Dashboard = () => {

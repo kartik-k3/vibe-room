@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Typography } from "@mui/material";
 import UIBackground from "../../components/uiCard/UIBackground";
-import { useWebRTC } from "./WebRTCContext";
+import { useWebRTC } from "../../container/webRTCContext/WebRTCContext";
 import UiSelect from "../../components/ui/UiSelect";
 import { useForm } from "react-hook-form";
 import { getConnectedDevices } from "../../config/helper/webRTCHelpers";
@@ -19,7 +19,7 @@ const DashboardRenderer = () => {
         controls?.changeAudioInputDevice(formatedDevices?.[0]?.deviceId);
       })
       ?.catch((error) => console.error(error));
-  }, []);
+  });
 
   return (
     <UIBackground>

@@ -24,7 +24,7 @@ const ClosedRoute = ({ component }) => {
 
 const RoutesComponent = () => {
   const themeMode = useSelector((state) => state.theme);
-  const theme = useMemo(() => getDesignTokens(themeMode));
+  const theme = useMemo(() => getDesignTokens(themeMode), [themeMode]);
   return (
     <>
       <ThemeProvider theme={theme}>
