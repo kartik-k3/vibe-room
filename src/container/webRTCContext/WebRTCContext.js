@@ -1,5 +1,11 @@
 import PropTypes from "prop-types";
-import React, { createContext, useContext, useRef, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 import { MEDIA_CONSTRAINTS_OBJECT } from "../../config/constants/MEDIA_CONSTRAINTS";
 import { WEBRTC_CONFIG } from "../../config/constants/WEBRTC_CONFIG";
 
@@ -46,32 +52,35 @@ export const WebRTCProvider = ({ children }) => {
     });
   };
 
-  const startAudioVideoStream = (mediaConstraints) => {
-    if (!localMediaRef?.current) throw new Error("Could not find video tag.");
-    if (!mediaConstraints?.audio?.deviceId && selectedDevices?.audio) {
-      //If toggle video function is calling with audio true then put the selected Device here
-      mediaConstraints = {
-        ...mediaConstraints,
-        audio: { deviceId: selectedDevices?.audio },
-      };
-    }
-    navigator.mediaDevices
-      .getUserMedia({
-        ...mediaConstraints,
-        audio: { ...mediaConstraints.audio, noiseSuppression: true }, //Noise Suppression stays on for every microphone
-      })
-      .then((stream) => {
-        const audioTrack = stream.getAudioTracks()[0];
-        if (!MEDIA_CONSTRAINTS?.audio) {
-          //The Audio Stays On but stays disabled if mute is on for seamless connectivity.
-          audioTrack.enabled = false;
-        }
-        localMediaRef.current.srcObject = stream;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+  const startAudioVideoStream = useCallback(
+    (mediaConstraints) => {
+      if (!localMediaRef?.current) throw new Error("Could not find video tag.");
+      if (!mediaConstraints?.audio?.deviceId && selectedDevices?.audio) {
+        //If toggle video function is calling with audio true then put the selected Device here
+        mediaConstraints = {
+          ...mediaConstraints,
+          audio: { deviceId: selectedDevices?.audio },
+        };
+      }
+      navigator.mediaDevices
+        .getUserMedia({
+          ...mediaConstraints,
+          audio: { ...mediaConstraints.audio, noiseSuppression: true }, //Noise Suppression stays on for every microphone
+        })
+        .then((stream) => {
+          const audioTrack = stream.getAudioTracks()[0];
+          if (!MEDIA_CONSTRAINTS?.audio) {
+            //The Audio Stays On but stays disabled if mute is on for seamless connectivity.
+            audioTrack.enabled = false;
+          }
+          localMediaRef.current.srcObject = stream;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    [localMediaRef, selectedDevices, MEDIA_CONSTRAINTS?.audio]
+  );
 
   const toggleMuteMic = () => {
     const newConstraints = {
@@ -100,7 +109,7 @@ export const WebRTCProvider = ({ children }) => {
 
   //WebRTC Methods
 
-  const initializePeers = () => {
+  const initializePeers = useCallback(() => {
     //Initializing WebRTC peers
     const peerConnection = new RTCPeerConnection(WEBRTC_CONFIG);
     setRTCState((prevState) => {
@@ -110,9 +119,29 @@ export const WebRTCProvider = ({ children }) => {
         status: "initialized",
       };
     });
-  };
+  }, [setRTCState]);
 
-  const createOffer = () => {};
+  const createOffer = useCallback(async () => {
+    //Creating new offer and setting SDP (Session Description Protocol) Locally
+    try {
+      let currentPeerConnection = RTCState?.peerConnection;
+
+      if (!currentPeerConnection) {
+        currentPeerConnection = new RTCPeerConnection(WEBRTC_CONFIG);
+      }
+      const offer = currentPeerConnection?.createOffer();
+      await currentPeerConnection?.setLocalDescription(offer);
+      setRTCState((prevState) => {
+        return {
+          ...prevState,
+          peerConnection: currentPeerConnection,
+          status: "calling",
+        };
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [setRTCState, RTCState?.peerConnection]);
 
   return (
     <WebRTCContext.Provider
@@ -124,6 +153,8 @@ export const WebRTCProvider = ({ children }) => {
           toggleWebCam,
           changeAudioInputDevice,
         },
+        initializePeers,
+        createOffer,
       }}
     >
       {children}

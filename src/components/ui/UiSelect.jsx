@@ -42,11 +42,15 @@ const UiSelect = (
               defaultValue={defaultValue}
               {...props}
             >
-              {options.map((item, idx) => (
-                <MenuItem key={idx} value={item}>
-                  {item?.label}
-                </MenuItem>
-              ))}
+              {options?.length > 0 ? (
+                options.map((item, idx) => (
+                  <MenuItem key={idx} value={item}>
+                    {item?.label}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem>No Options</MenuItem>
+              )}
             </TextField>
           );
         }}

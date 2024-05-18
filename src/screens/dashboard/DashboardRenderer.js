@@ -1,25 +1,13 @@
-import React from "react";
 import { Button, Typography } from "@mui/material";
+import React from "react";
+import { useForm } from "react-hook-form";
+import UiSelect from "../../components/ui/UiSelect";
 import UIBackground from "../../components/uiCard/UIBackground";
 import { useWebRTC } from "../../container/webRTCContext/WebRTCContext";
-import UiSelect from "../../components/ui/UiSelect";
-import { useForm } from "react-hook-form";
-import { getConnectedDevices } from "../../config/helper/webRTCHelpers";
-import { useEffect, useState } from "react";
 
-const DashboardRenderer = () => {
-  const { localMediaRef, controls } = useWebRTC();
-  const [deviceListOptions, setDeviceListOptions] = useState([]);
+const DashboardRenderer = ({ deviceListOptions = [] }) => {
+  const { localMediaRef, controls, createOffer } = useWebRTC();
   const { control } = useForm();
-
-  useEffect(() => {
-    getConnectedDevices("audioinput")
-      ?.then((formatedDevices) => {
-        setDeviceListOptions(formatedDevices);
-        controls?.changeAudioInputDevice(formatedDevices?.[0]?.deviceId);
-      })
-      ?.catch((error) => console.error(error));
-  }, []);
 
   return (
     <UIBackground>
@@ -56,6 +44,17 @@ const DashboardRenderer = () => {
             controls.changeAudioInputDevice(device?.value);
           }}
         />
+      </div>
+      <div>
+        <Button
+          variant="contained"
+          onClick={() => {
+            debugger;
+            createOffer();
+          }}
+        >
+          Join Room
+        </Button>
       </div>
     </UIBackground>
   );

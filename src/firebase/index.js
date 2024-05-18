@@ -1,12 +1,12 @@
 import { initializeApp } from "firebase/app";
 import {
-  getAuth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-  GoogleAuthProvider,
   FacebookAuthProvider,
+  getAuth,
   GithubAuthProvider,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
 import { getDatabase } from "firebase/database";
@@ -36,12 +36,12 @@ const FacebookAuthProviderInit = new FacebookAuthProvider();
 export {
   app,
   auth,
+  createUserWithEmailAndPassword,
   database,
-  GoogleAuthProviderInit,
   FacebookAuthProviderInit,
   GithubAuthProviderInit,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
+  GoogleAuthProviderInit,
   sendPasswordResetEmail,
+  signInWithEmailAndPassword,
   signInWithPopup,
 };

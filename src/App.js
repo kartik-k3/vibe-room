@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { GET_COLOR_SCHEME } from "./config/helper/colorSchemeHelper";
 import { Toaster } from "react-hot-toast";
 import { TOASTER_CONFIG } from "./config/constants/TOASTER_CONFIG";
+import { WebRTCProvider } from "./container/webRTCContext/WebRTCContext";
 
 function App() {
   const theme =
@@ -19,8 +20,10 @@ function App() {
   return (
     <div style={{ backgroundColor: GET_COLOR_SCHEME(theme)?.BACKGROUND }}>
       <Provider store={store}>
-        <Toaster {...TOASTER_CONFIG} />
-        <RoutesComponent />
+        <WebRTCProvider>
+          <Toaster {...TOASTER_CONFIG} />
+          <RoutesComponent />
+        </WebRTCProvider>
       </Provider>
     </div>
   );
