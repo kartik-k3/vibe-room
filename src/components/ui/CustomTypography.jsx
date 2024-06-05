@@ -1,4 +1,6 @@
 import { Typography } from "@mui/material";
+import PropTypes from "prop-types";
+import React from "react";
 
 const CustomTypography = (props) => {
   const { children } = props;
@@ -7,6 +9,10 @@ const CustomTypography = (props) => {
       {children}
     </Typography>
   );
+};
+
+CustomTypography.propTypes = {
+  children: PropTypes.string,
 };
 
 export default CustomTypography;

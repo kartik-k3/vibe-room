@@ -1,9 +1,9 @@
-import React, { useMemo } from "react";
-import { useSelector } from "react-redux";
-import { Routes, BrowserRouter, Route, Navigate } from "react-router-dom";
-import { getDesignTokens } from "../config/helper/colorSchemeHelper";
 import { ThemeProvider } from "@mui/material";
 import Proptypes from "prop-types";
+import React, { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { getDesignTokens } from "../config/helper/colorSchemeHelper";
 
 const LOGIN_PAGE = React.lazy(() => import("../screens/login/Login"));
 const RESET_PAGE = React.lazy(() => import("../screens/login/Reset"));
@@ -23,14 +23,17 @@ const ClosedRoute = ({ component }) => {
 };
 
 const RoutesComponent = () => {
+  //Theme States
   const themeMode = useSelector((state) => state.theme);
   const theme = useMemo(() => getDesignTokens(themeMode), [themeMode]);
+
+  //Authentication should not be handled here, single responsibility principle
   return (
     <>
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           <Routes>
-            {Object.keys(PATHS).map((path, idx) => {
+            {Object?.keys(PATHS)?.map((path, idx) => {
               return (
                 <>
                   <Route

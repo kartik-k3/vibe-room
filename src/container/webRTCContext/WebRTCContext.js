@@ -3,15 +3,22 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useMemo,
   useRef,
   useState,
 } from "react";
+import { useSelector } from "react-redux";
 import { MEDIA_CONSTRAINTS_OBJECT } from "../../config/constants/MEDIA_CONSTRAINTS";
 import { WEBRTC_CONFIG } from "../../config/constants/WEBRTC_CONFIG";
+import { firebaseUserConfig } from "../../config/helper/firebaseHelpers";
+import { getGeneratedRoomId } from "../../config/helper/webRTCHelpers";
 
 const WebRTCContext = createContext();
 
 export const WebRTCProvider = ({ children }) => {
+  //User Data
+  const userData = useSelector((state) => state?.user?.user);
+
   //States for Media capture and configuration
   const [MEDIA_CONSTRAINTS, setMEDIACONSTRAINTS] = useState(
     MEDIA_CONSTRAINTS_OBJECT
@@ -28,6 +35,21 @@ export const WebRTCProvider = ({ children }) => {
     dataChannel: null,
     status: "idle",
   });
+
+  //States for Meeting Settings
+  const [roomSettings, setRoomSettings] = useState({
+    roomId: "",
+    participants: {},
+  });
+
+  //Methods for Changing Meeting Settings
+  const changeRoomId = (roomId) => {
+    if (!roomId) roomId = getGeneratedRoomId();
+    setRoomSettings((prevState) => {
+      return { ...prevState, roomId: roomId };
+    });
+    return roomId;
+  };
 
   //Methods for Media capture and settings
   const stopCurrentStream = () => {
@@ -54,6 +76,7 @@ export const WebRTCProvider = ({ children }) => {
 
   const startAudioVideoStream = useCallback(
     (mediaConstraints) => {
+      delete mediaConstraints.screenSharing;
       if (!localMediaRef?.current) throw new Error("Could not find video tag.");
       if (!mediaConstraints?.audio?.deviceId && selectedDevices?.audio) {
         //If toggle video function is calling with audio true then put the selected Device here
@@ -108,6 +131,30 @@ export const WebRTCProvider = ({ children }) => {
   };
 
   //WebRTC Methods
+  const firebaseConfig = useMemo(() => {
+    //Function closure with node refs and listeners encapsulated
+    return firebaseUserConfig({
+      roomId: roomSettings?.roomId,
+      userId: userData?.user_id,
+      setRTCState, // IDK if it is ok to send it to firebase helper
+      setRoomSettings,
+    });
+  }, [roomSettings?.roomId, userData?.user_id]);
+
+  const signalingChannel = useCallback(
+    (action) => {
+      debugger;
+      if (action?.offer) {
+        firebaseConfig?.joinRoom({
+          name: userData?.email?.split("@")?.[0],
+          preferences: MEDIA_CONSTRAINTS,
+        });
+      } else {
+        console.error("No Action Found");
+      }
+    },
+    [firebaseConfig, MEDIA_CONSTRAINTS, userData?.email]
+  );
 
   const initializePeers = useCallback(() => {
     //Initializing WebRTC peers
@@ -121,28 +168,12 @@ export const WebRTCProvider = ({ children }) => {
     });
   }, [setRTCState]);
 
-  const createOffer = useCallback(async () => {
+  const joinRoom = useCallback(async () => {
     //Creating new offer and setting SDP (Session Description Protocol) Locally
-    try {
-      let currentPeerConnection = RTCState?.peerConnection;
+    signalingChannel({ offer: true });
+  }, [signalingChannel]);
 
-      if (!currentPeerConnection) {
-        currentPeerConnection = new RTCPeerConnection(WEBRTC_CONFIG);
-      }
-      const offer = currentPeerConnection?.createOffer();
-      await currentPeerConnection?.setLocalDescription(offer);
-      setRTCState((prevState) => {
-        return {
-          ...prevState,
-          peerConnection: currentPeerConnection,
-          status: "calling",
-        };
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, [setRTCState, RTCState?.peerConnection]);
-
+  //Context.Provider Rendered with children
   return (
     <WebRTCContext.Provider
       value={{
@@ -154,7 +185,9 @@ export const WebRTCProvider = ({ children }) => {
           changeAudioInputDevice,
         },
         initializePeers,
-        createOffer,
+        joinRoom,
+        roomSettings: { changeRoomId, roomSettings },
+        RTCState,
       }}
     >
       {children}

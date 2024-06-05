@@ -1,16 +1,18 @@
-import React from "react";
 import { Button } from "@mui/material";
-import { getGeneratedRoomId } from "../../config/helper/webRTCHelpers";
-import UIBackground from "../../components/uiCard/UIBackground";
-import CustomTypography from "../../components/ui/CustomTypography";
+import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import CustomTypography from "../../components/ui/CustomTypography";
+import UIBackground from "../../components/uiCard/UIBackground";
+import { useWebRTC } from "../../container/webRTCContext/WebRTCContext";
 
 const EntryScreen = () => {
   const navigate = useNavigate();
+  const { roomSettings } = useWebRTC();
 
-  const redirectToDashboard = () => {
-    navigate(`${getGeneratedRoomId()}`);
-  };
+  const redirectToDashboard = useCallback(() => {
+    //Creates a new Meeting Link and Redirects to it
+    navigate(`${roomSettings?.changeRoomId()}`);
+  }, [navigate, roomSettings]);
 
   return (
     <>

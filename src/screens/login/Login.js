@@ -35,10 +35,7 @@ const Login = () => {
   const handleOauthFlow = (provider) => {
     const popupPromise = signInWithPopup(auth, provider)
       .then((result) => {
-        const credential = provider.credentialFromResult(result);
-        const token = credential.accessToken;
-        reduxDispatch(setUserData(token));
-        console.log(token);
+        reduxDispatch(setUserData(result?.user));
         navigate("/dashboard");
         return "Popup sent";
       })
