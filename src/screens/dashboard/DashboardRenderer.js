@@ -16,7 +16,7 @@ const DashboardRenderer = ({ deviceListOptions = [] }) => {
     <UIBackground>
       <>
         <Typography style={{ color: "white" }}>hello</Typography>
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", visibility: "hidden" }}>
           <video
             id="User1"
             autoPlay

@@ -11,7 +11,7 @@ const RESET_PAGE = React.lazy(() => import("../screens/login/Reset"));
 const OpenRoute = ({ component: Component }) => {
   return (
     <>
-      <React.Suspense>
+      <React.Suspense fallback={<div>Loading...</div>}>
         <Component />
       </React.Suspense>
     </>
@@ -32,7 +32,7 @@ const RoutesComponent = () => {
     <>
       <ThemeProvider theme={theme}>
         <BrowserRouter>
-          <Routes>
+          <Routes key={theme}>
             {Object?.keys(PATHS)?.map((path, idx) => {
               return (
                 <>

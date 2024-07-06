@@ -10,11 +10,12 @@ import { WebRTCProvider } from "./container/webRTCContext/WebRTCContext";
 import withAuthentication from "./container/hoc/withAuthentication";
 
 function App() {
-  const theme =
-    store?.liftedStore?.getState()?.computedStates?.[0]?.state?.theme?.theme;
+  const theme = store?.getState()?.theme?.theme;
+
   const RoutesWithAuthentication = withAuthentication(RoutesComponent);
 
   useEffect(() => {
+    debugger;
     document.body.style.backgroundColor = theme === "dark" ? "black" : "white";
   }, [theme]);
 

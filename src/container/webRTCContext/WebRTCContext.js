@@ -138,12 +138,12 @@ export const WebRTCProvider = ({ children }) => {
       userId: userData?.user_id,
       setRTCState, // IDK if it is ok to send it to firebase helper
       setRoomSettings,
+      localMediaRef,
     });
   }, [roomSettings?.roomId, userData?.user_id]);
 
   const signalingChannel = useCallback(
     (action) => {
-      debugger;
       if (action?.offer) {
         firebaseConfig?.joinRoom({
           name: userData?.email?.split("@")?.[0],
