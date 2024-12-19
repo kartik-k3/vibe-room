@@ -1,18 +1,20 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import TextInputField from "../../components/ui/TextInputField";
 import { Button, Typography } from "@mui/material";
-import { signInWithEmailAndPassword, signInWithPopup } from "../../firebase";
-import { auth } from "../../firebase";
-import { useDispatch } from "react-redux";
-import UICard from "../../components/uiCard/UICard";
-import UIBackground from "../../components/uiCard/UIBackground";
-import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { setUserData } from "../../container/redux/reduxSlice/UserSlice";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import TextInputField from "../../components/ui/TextInputField";
+import UIBackground from "../../components/uiCard/UIBackground";
+import UICard from "../../components/uiCard/UICard";
 import { OAUTH } from "../../config/constants/OAUTH_LIST";
+import { setUserData } from "../../container/redux/reduxSlice/UserSlice";
+import {
+  auth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "../../firebase";
 
 const Login = () => {
   const { control, handleSubmit } = useForm();
@@ -33,7 +35,14 @@ const Login = () => {
   };
 
   const handleOauthFlow = (provider) => {
-    const popupPromise = signInWithPopup(auth, provider)
+    const popupPromise = signInWithPopup(auth, provider);
+    debugger;
+    toast.promise(popupPromise, {
+      loading: "Looking for Sign in App...",
+      success: "Successfully Logged In",
+      error: "Could not open sign in",
+    });
+    popupPromise
       .then((result) => {
         reduxDispatch(setUserData(result?.user));
         navigate("/dashboard");
@@ -43,37 +52,30 @@ const Login = () => {
         console.error(error.message);
         return "Popup Error";
       });
-    toast.promise(popupPromise, {
-      loading: "Looking for Sign in App...",
-      success: "Successfully Logged In",
-      error: "Could not open sign in",
-    });
   };
 
-  const handleSignIn = async (formData) => {
+  const handleSignIn = (formData) => {
     const signInPromise = signInWithEmailAndPassword(
       //creating a promise to show the status in toast.
       auth,
       formData?.email,
       formData?.password
-    )
-      .then((userCredential) => {
-        localStorage.setItem("jwt", userCredential?.user?.accessToken);
-        const result = jwtDecode(userCredential?.user?.accessToken);
-        reduxDispatch(setUserData(result));
-        navigate("/dashboard");
-        return result; //We have to put a return in the .then to create a promise.
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        console.error(errorMessage);
-        return error.message;
-      });
+    );
     toast.promise(signInPromise, {
       loading: "Signing You In...",
       success: "Signed in Successfully!",
       error: "There was a Problem While Signing You In",
     });
+    signInPromise
+      .then((userCredential) => {
+        localStorage.setItem("jwt", userCredential?.user?.accessToken);
+        const result = jwtDecode(userCredential?.user?.accessToken);
+        reduxDispatch(setUserData(result));
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   };
 
   return (
